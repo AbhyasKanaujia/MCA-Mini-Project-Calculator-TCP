@@ -50,7 +50,7 @@ while True:
     result = ""
     try:
         if(data != ""):
-            result = round(eval(data), 2)
+            result = eval(data)
     except Exception as e:
         result = "Invalid Expression!!"
     print("Sending reply: ", result)
