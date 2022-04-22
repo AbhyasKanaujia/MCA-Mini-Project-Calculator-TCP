@@ -66,6 +66,19 @@ def clear_click():
     operator = False
 
 
+def backspace_click():
+    e.config(state='normal')
+    if(len(e.get()) > 1):
+        e.delete(len(e.get()) - 1, END)
+    else:
+        clear_click()
+    e.config(state='disable')
+
+    if operator != False:
+        ans = getResultFromServer(e.get())
+        ResultLabel.config(text=ans)
+
+
 def operator_click(symbol):
 
     e.config(state='normal')
@@ -115,9 +128,10 @@ button_modulus = Button(root, text="%", padx=40, pady=20,
 # Create Function Buttons
 button_equal = Button(root, text="=", padx=185, pady=20,
                       command=equal_click, bg='#8C28DA')
-
 button_clear = Button(root, text="Clear", padx=77,
                       pady=20, command=clear_click, bg='#FEB92D')
+button_backspace = Button(root, text="<", padx=89, pady=20,
+                          command=backspace_click, bg='#FFE3A3')
 
 # place widgets on screen
 # Place main display on row 1
@@ -154,5 +168,6 @@ button_equal.grid(row=6, column=0, columnspan=4)
 
 # Place % and clear on row 8
 button_clear.grid(row=7, column=0, columnspan=2)
+button_backspace.grid(row=7, column=2, columnspan=2)
 
 root.mainloop()
