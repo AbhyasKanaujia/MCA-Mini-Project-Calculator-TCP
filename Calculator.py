@@ -26,20 +26,6 @@ def getResultFromServer(expression):
     client.close()
 
     return result
-    # e.delete(0, END)
-    # e.insert(0, result)
-
-
-# def button_click(number):
-#     e.config(state='normal')
-#     if number == 'clear':
-#         e.delete(0, END)
-#     elif number == '=':
-#         if e.get() != "":
-#             getResultFromServer(e.get())
-#     else:
-#         e.insert(END, str(number))
-#     e.config(state='disabled')
 
 # if any operator
 operator = False
