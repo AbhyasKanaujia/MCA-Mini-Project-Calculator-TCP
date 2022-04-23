@@ -20,7 +20,7 @@ def checkInvalid():
     if exp == "":
         return True
     last_char = exp[-1]
-    if last_char in ('+', '-', '*', '/', '%'):
+    if last_char in ('+', '-', '*', '/', '%','.'):
         return True
     return False
 
@@ -54,20 +54,11 @@ def equal_click():
     if checkInvalid() == True:
         return
     global operator
-    e.config(state='normal')
-    if e.get() == "" or operator < 1:
-        return
-    ans = getResultFromServer(e.get())
-    ResultLabel.config(text="")
-    e.delete(0, END)
-    e.insert(0, ans)
-    e.config(state='disabled')
-    operator = 0
-
-    if operator >= 1:
+    e.config(state='normal') 
+    if operator >= 1:   
         ans = getResultFromServer(e.get())
         if ans == "Invalid Expression!!":
-            ans = ""
+            return
         ResultLabel.config(text="")
         e.delete(0, END)
         e.insert(0, ans)
