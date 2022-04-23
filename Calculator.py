@@ -84,7 +84,7 @@ def digit_click(number):
 
 
 def clear_click():
-   
+
     global decimal_status
     decimal_status = False
     e.config(state='normal')
@@ -101,7 +101,7 @@ def clear_click():
 def backspace_click():
 
     global operator
-    global decimal_status 
+    global decimal_status
     exp = e.get()
 
     # nothing in entry
@@ -144,13 +144,16 @@ def backspace_click():
         ans = getResultFromServer(exp)
         ResultLabel.config(text=ans)
 
+
 decimal_status = False
+
+
 def operator_click(symbol):
 
     global decimal_status
     if checkInvalid() == True:
         return
-    
+
     if symbol == '.' and decimal_status == True:
         return
 
@@ -203,7 +206,7 @@ button_modulus = Button(root, text='%', padx=38, pady=20,
                         command=lambda: operator_click('%'), bg='#E1D5E9')
 # Create Function Buttons
 button_equal = Button(root, text='=', padx=189, pady=20,
-                      command=equal_click, bg='#8C28DA')
+                      command=equal_click, bg='#8C28DA', fg='#ffffff')
 button_clear = Button(root, text='Clear', padx=77,
                       pady=20, command=clear_click, bg='#FEB92D')
 button_backspace = Button(root, text='<', padx=89, pady=20,
