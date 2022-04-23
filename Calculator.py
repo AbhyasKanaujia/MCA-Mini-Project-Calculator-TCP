@@ -11,7 +11,7 @@ tkFont.nametofont('TkDefaultFont').configure(size=12)
 e = Entry(root, width=30, borderwidth=4,
           state='disabled', disabledbackground='white', disabledforeground='black', font='Courier 15 bold')
 # Create Quick Result Label
-ResultLabel = Label(root, text='', justify='left', anchor='w', font='Courier')
+ResultLabel = Label(root, text='', font='Courier',  justify='left')
 
 
 def getResultFromServer(expression):
@@ -35,7 +35,7 @@ operator = 0
 
 
 def equal_click():
-    
+
     global operator
     e.config(state='normal')
     if e.get() == "" or operator < 1:
@@ -71,20 +71,20 @@ def clear_click():
 
 
 def backspace_click():
-    
+
     global operator
     exp = e.get()
-    
+
     # nothing in entry
     if exp == "":
         return
     last_char = exp[-1]
 
-    # if last_char is operator 
+    # if last_char is operator
     if last_char in ('+', '-', '*', '/', '%'):
         operator = operator - 1
 
-    #removing last character
+    # removing last character
     e.config(state='normal')
     if(len(e.get()) > 1):
         e.delete(len(e.get()) - 1, END)
@@ -92,26 +92,26 @@ def backspace_click():
         clear_click()
     e.config(state='disable')
 
-    #getting removed string
+    # getting removed string
     exp = e.get()
     if exp == "":
         return
 
     last_char = exp[-1]
 
-    #checking if last character if operator 
+    # checking if last character if operator
     if last_char in ('+', '-', '*', '/', '%'):
-        #if single operator is left empty label
+        # if single operator is left empty label
         if operator == 1:
-            ResultLabel.config(text= "")
-        #calculating from string without last
+            ResultLabel.config(text="")
+        # calculating from string without last
         else:
             ans = getResultFromServer(exp[:-1])
-            ResultLabel.config(text = ans)
-    #normal calculating
+            ResultLabel.config(text=ans)
+    # normal calculating
     elif operator > 0:
         ans = getResultFromServer(exp)
-        ResultLabel.config(text = ans)
+        ResultLabel.config(text=ans)
 
 
 def operator_click(symbol):
@@ -172,7 +172,7 @@ button_backspace = Button(root, text='<', padx=89, pady=20,
 # Place main display on row 1
 e.grid(row=0, column=0, columnspan=5, padx=10, pady=10)
 # Place Quick Result on row 2
-ResultLabel.grid(row=1, column=0, columnspan=5, padx=10, pady=10)
+ResultLabel.grid(row=1, column=0, columnspan=5, padx=10, pady=10, sticky='w')
 
 # Place 7 8 9 and / on row 3
 button_7.grid(row=2, column=0)
