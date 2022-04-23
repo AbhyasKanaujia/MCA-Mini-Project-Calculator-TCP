@@ -28,20 +28,22 @@ def getResultFromServer(expression):
 
 
 # if any operator
-operator = False
+operator = 0
 
 
 def equal_click():
+    
+    global operator
     e.config(state='normal')
-    if e.get() != "":
-        ans = getResultFromServer(e.get())
-
+    if e.get() == "" or operator < 1:
+        return
+        
+    ans = getResultFromServer(e.get())
     ResultLabel.config(text="")
     e.delete(0, END)
     e.insert(0, ans)
     e.config(state='disabled')
-    global operator
-    operator = False
+    operator = 0
 
 
 def digit_click(number):
@@ -63,10 +65,24 @@ def clear_click():
 
     ResultLabel.config(text="")
     global operator
-    operator = False
+    operator = 0
 
 
 def backspace_click():
+    
+    global operator
+    exp = e.get()
+    
+    # nothing in entry
+    if exp == "":
+        return
+    last_char = exp[-1]
+
+    # if last_char is operator 
+    if last_char in ('+', '-', '*', '/', '%'):
+        operator = operator - 1
+
+    #removing last character
     e.config(state='normal')
     if(len(e.get()) > 1):
         e.delete(len(e.get()) - 1, END)
@@ -74,9 +90,26 @@ def backspace_click():
         clear_click()
     e.config(state='disable')
 
-    if operator != False:
-        ans = getResultFromServer(e.get())
-        ResultLabel.config(text=ans)
+    #getting removed string
+    exp = e.get()
+    if exp == "":
+        return
+
+    last_char = exp[-1]
+
+    #checking if last character if operator 
+    if last_char in ('+', '-', '*', '/', '%'):
+        #if single operator is left empty label
+        if operator == 1:
+            ResultLabel.config(text= "")
+        #calculating from string without last
+        else:
+            ans = getResultFromServer(exp[:-1])
+            ResultLabel.config(text = ans)
+    #normal calculating
+    elif operator > 0:
+        ans = getResultFromServer(exp)
+        ResultLabel.config(text = ans)
 
 
 def operator_click(symbol):
@@ -87,7 +120,7 @@ def operator_click(symbol):
 
     if symbol != '.':
         global operator
-        operator = True
+        operator = operator + 1
 
 
 # Create Number Buttons
