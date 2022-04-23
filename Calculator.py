@@ -25,18 +25,22 @@ def checkInvalid():
     return False
 
 def getResultFromServer(expression):
-    host = socket.gethostname()
-    print('Sending Request to Server: ', expression)
-    port = 5000
-    client = socket.socket()
-    client.connect((host, port))
-    client.send(expression.encode())
+    try:
+        host = socket.gethostname()
+        print('Sending Request to Server: ', expression)
+        port = 5000
+        client = socket.socket()
+        client.connect((host, port))
+        client.send(expression.encode())
 
-    result = client.recv(1024).decode()
-    print('Received From Server: ', result)
+        result = client.recv(1024).decode()
+        print('Received From Server: ', result)
 
-    client.close()
+        client.close()
 
+    except Exception as e:
+        print('Server unreachable...')
+        result = 'Server unreachable...'
     return result
 
 
@@ -51,7 +55,7 @@ def equal_click():
         return
     global operator
     e.config(state='normal') 
-    if operator >= 1:    
+    if operator >= 1:   
         ans = getResultFromServer(e.get())
         if ans == "Invalid Expression!!":
             return
@@ -60,7 +64,7 @@ def equal_click():
         e.insert(0, ans)
         e.config(state='disabled')
         operator = 0
-        
+
     ResultMode = True
 
 def digit_click(number):
