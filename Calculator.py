@@ -15,14 +15,16 @@ ResultLabel = Label(root, text='', font='Courier',  justify='left')
 
 ResultMode = False
 
+
 def checkInvalid():
     exp = e.get()
-    if exp == "":
+    if exp == '':
         return True
     last_char = exp[-1]
-    if last_char in ('+', '-', '*', '/', '%','.'):
+    if last_char in ('+', '-', '*', '/', '%', '.'):
         return True
     return False
+
 
 def getResultFromServer(expression):
     try:
@@ -54,18 +56,19 @@ def equal_click():
     if checkInvalid() == True:
         return
     global operator
-    e.config(state='normal') 
-    if operator >= 1:   
+    if operator >= 1:
         ans = getResultFromServer(e.get())
-        if ans == "Invalid Expression!!":
+        if ans in ['Invalid Expression!!', 'Server unreachable...']:
             return
-        ResultLabel.config(text="")
+        ResultLabel.config(text='')
+        e.config(state='normal')
         e.delete(0, END)
         e.insert(0, ans)
         e.config(state='disabled')
         operator = 0
 
     ResultMode = True
+
 
 def digit_click(number):
 
@@ -97,7 +100,7 @@ def backspace_click():
     exp = e.get()
 
     # nothing in entry
-    if exp == "":
+    if exp == '':
         return
     last_char = exp[-1]
 
@@ -115,16 +118,16 @@ def backspace_click():
 
     # getting removed string
     exp = e.get()
-    if exp == "":
+    if exp == '':
         return
 
     last_char = exp[-1]
 
-    # checking if last character if operator
+    # checking if last character in operator
     if last_char in ('+', '-', '*', '/', '%'):
         # if single operator is left empty label
         if operator == 1:
-            ResultLabel.config(text="")
+            ResultLabel.config(text='')
         # calculating from string without last
         else:
             ans = getResultFromServer(exp[:-1])
