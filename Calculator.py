@@ -13,6 +13,16 @@ e = Entry(root, width=30, borderwidth=4,
 # Create Quick Result Label
 ResultLabel = Label(root, text='', justify='left', anchor='w', font='Courier')
 
+ResultMode = False
+
+def checkInvalid():
+    exp = e.get()
+    if exp == "":
+        return True
+    last_char = exp[-1]
+    if last_char in ('+', '-', '*', '/', '%'):
+        return True
+    return False
 
 def getResultFromServer(expression):
     host = socket.gethostname()
@@ -35,9 +45,13 @@ operator = 0
 
 
 def equal_click():
-    
+    global ResultMode
+
+    if checkInvalid() == True:
+        return
     global operator
     e.config(state='normal')
+<<<<<<< Updated upstream
     if e.get() == "" or operator < 1:
         return
     ans = getResultFromServer(e.get())
@@ -47,9 +61,25 @@ def equal_click():
     e.config(state='disabled')
     operator = 0
 
+=======
+    
+    if operator >= 1:    
+        ans = getResultFromServer(e.get())
+        if ans == "Invalid Expression!!":
+            ans = ""
+        ResultLabel.config(text="")
+        e.delete(0, END)
+        e.insert(0, ans)
+        e.config(state='disabled')
+        operator = 0
+    
+    ResultMode = True
+>>>>>>> Stashed changes
 
 def digit_click(number):
 
+    if ResultMode == True and operator == 0:
+        clear_click()
     e.config(state='normal')
     e.insert(END, str(number))
     e.config(state='disable')
@@ -116,6 +146,8 @@ def backspace_click():
 
 def operator_click(symbol):
 
+    if checkInvalid() == True:
+        return
     e.config(state='normal')
     e.insert(END, str(symbol))
     e.config(state='disable')
