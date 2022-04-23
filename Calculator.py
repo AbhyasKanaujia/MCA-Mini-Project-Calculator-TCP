@@ -78,13 +78,15 @@ def digit_click(number):
     e.insert(END, str(number))
     e.config(state='disable')
 
-    if operator != False:
+    if operator != 0:
         ans = getResultFromServer(e.get())
         ResultLabel.config(text=ans)
 
 
 def clear_click():
-
+   
+    global decimal_status
+    decimal_status = False
     e.config(state='normal')
     e.delete(0, END)
     e.config(state='disable')
@@ -99,6 +101,7 @@ def clear_click():
 def backspace_click():
 
     global operator
+    global decimal_status 
     exp = e.get()
 
     # nothing in entry
@@ -106,6 +109,8 @@ def backspace_click():
         return
     last_char = exp[-1]
 
+    if last_char == '.':
+        decimal_status = False
     # if last_char is operator
     if last_char in ('+', '-', '*', '/', '%'):
         operator = operator - 1
@@ -139,11 +144,16 @@ def backspace_click():
         ans = getResultFromServer(exp)
         ResultLabel.config(text=ans)
 
-
+decimal_status = False
 def operator_click(symbol):
 
+    global decimal_status
     if checkInvalid() == True:
         return
+    
+    if symbol == '.' and decimal_status == True:
+        return
+
     e.config(state='normal')
     e.insert(END, str(symbol))
     e.config(state='disable')
@@ -151,6 +161,9 @@ def operator_click(symbol):
     if symbol != '.':
         global operator
         operator = operator + 1
+        decimal_status = False
+    else:
+        decimal_status = True
 
 
 # Create Number Buttons
