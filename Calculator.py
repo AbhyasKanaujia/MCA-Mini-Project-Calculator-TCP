@@ -92,6 +92,8 @@ def clear_click():
     ResultLabel.config(text='')
     global operator
     operator = 0
+    global ResultMode
+    ResultMode = False
 
 
 def backspace_click():
