@@ -3,7 +3,7 @@ import re
 
 
 def sanitizeExpression(exp):
-    op = "+-*/"
+    op = "+-*/%"
     opIndex = []
     clean = ''
 
