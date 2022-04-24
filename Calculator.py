@@ -1,9 +1,13 @@
+# Import GUI and Socket libraries
 from tkinter import *
 import tkinter.font as tkFont
 import socket
 
+# create a GUI window
 root = Tk()
+# Set the title of the GUI window
 root.title('Simple Calculator')
+# Set font size to 12
 tkFont.nametofont('TkDefaultFont').configure(size=12)
 
 
@@ -13,7 +17,8 @@ e = Entry(root, width=30, borderwidth=4,
 # Create Quick Result Label
 ResultLabel = Label(root, text='', font='Courier',  justify='left')
 
-ResultMode = False
+# Check if expression is valid
+# Invalid if last is operators and empty
 
 
 def checkInvalid():
@@ -25,41 +30,73 @@ def checkInvalid():
         return True
     return False
 
+# Client code for getting result from server
+
 
 def getResultFromServer(expression):
+    # Attempt to get result from the server
     try:
+        # get the hostname
         host = socket.gethostname()
+
+        # Display message
         print('Sending Request to Server: ', expression)
+
+        # get the port number
         port = 5000
+
+        # get the instance of socket
         client = socket.socket()
+
+        # connect to the server
         client.connect((host, port))
+
+        # Encode and send the expression
         client.send(expression.encode())
 
+        # get the result from server
         result = client.recv(1024).decode()
+
+        # Display result
         print('Received From Server: ', result)
 
+        # close the connection
         client.close()
-
+    # If fail to get result from server then
     except Exception as e:
+        # Display server unreachable message
         print('Server unreachable...')
         result = 'Server unreachable...'
     return result
 
 
+# Global Variables
+
 # if any operator
 operator = 0
+# If current number has decimal
+decimal_status = False
+# Sets result mode and input mode
+ResultMode = False
 
 
+# Handle when equal button is pressed
 def equal_click():
+    # Change to result mode
     global ResultMode
 
+    # If expression is invalid then return
     if checkInvalid() == True:
         return
+
+    # Get result from server when more than one operator
     global operator
     if operator >= 1:
         ans = getResultFromServer(e.get())
         if ans in ['Invalid Expression!!', 'Server unreachable...']:
             return
+
+        # get result and update labels
         ResultLabel.config(text='')
         e.config(state='normal')
         e.delete(0, END)
@@ -67,37 +104,51 @@ def equal_click():
         e.config(state='disabled')
         operator = 0
 
+    # set display to result mode
     ResultMode = True
 
 
+# Handle number button is pressed
 def digit_click(number):
-
+    # If result mode then clear
     if ResultMode == True and operator == 0:
         clear_click()
+
+    # Append pressed number
     e.config(state='normal')
     e.insert(END, str(number))
     e.config(state='disable')
 
+    # If valid then display result in label
     if operator != 0:
         ans = getResultFromServer(e.get())
         ResultLabel.config(text=ans)
 
+# Handle Clear button is pressed
+
 
 def clear_click():
 
+    # set all flags to neutral state
     global decimal_status
     decimal_status = False
+
+    # clear the display
     e.config(state='normal')
     e.delete(0, END)
     e.config(state='disable')
 
+    # clear the label
     ResultLabel.config(text='')
     global operator
+
+    # set other flags to netural state
     operator = 0
     global ResultMode
     ResultMode = False
 
 
+# Handle Backspace button is pressed
 def backspace_click():
 
     global operator
@@ -145,27 +196,30 @@ def backspace_click():
         ResultLabel.config(text=ans)
 
 
-decimal_status = False
-
-
+# Handle if operation(+-/*%.) button is pressed
 def operator_click(symbol):
 
     global decimal_status
+    # If invalid then return
     if checkInvalid() == True:
         return
 
+    # If decimal invalid then return
     if symbol == '.' and decimal_status == True:
         return
 
+    # Append operator
     e.config(state='normal')
     e.insert(END, str(symbol))
     e.config(state='disable')
 
+    # If operator then increment operator count
     if symbol != '.':
         global operator
         operator = operator + 1
         decimal_status = False
     else:
+        # if decimal then set decimal status to true
         decimal_status = True
 
 
@@ -191,6 +245,7 @@ button_9 = Button(root, text='9', padx=40, pady=20,
 button_0 = Button(root, text='0', padx=40, pady=20,
                   command=lambda: digit_click(0))
 
+# Create decimal button
 button_decimal = Button(root, text='.', padx=43, pady=20,
                         command=lambda: operator_click('.'))
 # Create Operation Buttons
@@ -249,4 +304,5 @@ button_equal.grid(row=6, column=0, columnspan=4)
 button_clear.grid(row=7, column=0, columnspan=2)
 button_backspace.grid(row=7, column=2, columnspan=2)
 
+# Main GUI Event Loop
 root.mainloop()
